@@ -1,6 +1,10 @@
 import React from 'react';
 
-const Cryptocurrencies : React.FC = () => {
+export interface ICryptocurrenciesProps {
+  simplified?: true
+}
+
+const Cryptocurrencies : React.FC<ICryptocurrenciesProps> = (props) => {
   return (
     <div >
       

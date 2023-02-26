@@ -1,6 +1,10 @@
 import React from 'react';
 
-const News : React.FC = () => {
+export interface INewsProps {
+  simplified?: true
+}
+
+const News : React.FC<INewsProps> = (props) => {
   return (
     <div >
       
