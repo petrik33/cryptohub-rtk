@@ -8,7 +8,7 @@ import Cryptocurrencies from '../Cryptocurrencies/Cryptocurrencies';
 import News from '../News/News';
 
 const Homepage : React.FC = () => {
-  const { data, isFetching } = useGetCoinsQuery();
+  const { data, isFetching } = useGetCoinsQuery({});
 
   console.log(data);
 
