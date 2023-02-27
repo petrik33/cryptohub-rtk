@@ -13,7 +13,7 @@ export interface ISearchNewsResponseArticle {
 }
 
 export interface ISearchNewsResponse {
-  status: 'success',
+  status: 'ok',
   totalResults: number,
   articles: ISearchNewsResponseArticle[]
 }
@@ -45,28 +45,20 @@ export const newsApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl }),
   endpoints: (builder) => ({
     searchNews: builder.query<ISearchNewsResponse, ISearchNewsRequest>({
-      query: ({
-        q = defaultSearchQuery,
-        from = getDayAgo(),
-        to = new Date(),
-        publisher = defaultPublishers,
-        pageSize = defaultPageSize,
-        language = defaultLang,
-        country = defaultCountry
-      }) => {
-        return searchNewsUrl({q, from, to, publisher, pageSize, language, country});
+      query: (params) => {
+        return searchNewsUrl(params);
       }
     })
   })
 })
 
-const defaultSearchQuery = 'cryptocurrencies';
-const defaultPageSize = 10;
-const defaultPublishers = ['cnn.com','bbc.com'];
-const defaultLang = 'en';
-const defaultCountry = 'us';
+export const defaultSearchQuery = 'cryptocurrencies';
+export const defaultPageSize = 10;
+export const defaultPublishers = ['cnn.com','bbc.com'];
+export const defaultLang = 'en';
+export const defaultCountry = 'us';
 
-const getDayAgo = () => {
+export const getDayAgo = () => {
   let dateTime = new Date();
   dateTime.setDate(dateTime.getDate() - 1);
   return dateTime;
