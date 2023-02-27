@@ -38,8 +38,6 @@ export interface IGetCoinsRequestParams {
   count?: number
 }
 
-export type GetCoinsQueryArgs = IGetCoinsRequestParams | void;
-
 const cryptoApiHeaders = {
   'X-RapidAPI-Key': '8d5bd050famsh29095876256dab5p18e012jsnf91ca09d30c0',
   'X-RapidAPI-Host': 'coinranking1.p.rapidapi.com'
@@ -50,27 +48,34 @@ const baseUrl = 'https://coinranking1.p.rapidapi.com';
 const createRequest = (url : string) => ({ url, headers: cryptoApiHeaders});
 
 const cryptoApi = createApi({
-  reducerPath: 'getCoins',
+  reducerPath: 'cryptoApi',
   baseQuery: fetchBaseQuery({ baseUrl }),
   endpoints: (builder) => ({
-    getCoins: builder.query<IGetCoinsResponse, GetCoinsQueryArgs>({
+    getCoins: builder.query<IGetCoinsResponse, IGetCoinsRequestParams | void>({
       query: (params) => {
-        let url = './coins';
-
-        if(!params) {
-          return createRequest(url);
-        }
-
-        if(params.count) {
-          url += `?limit=${params.count}`;
-        }
-        
-        return createRequest(url);
+        return getCoinsUrl(params);
       }
     })
   })
 })
 
-export const { useGetCoinsQuery } = cryptoApi;
+const getCoinsUrl = 
+  (params: IGetCoinsRequestParams | void) => {
+    let url = './coins';
+
+    if(!params) {
+      return createRequest(url);
+    }
+
+    if(params.count) {
+      url += `?limit=${params.count}`;
+    }
+    
+    return createRequest(url);
+}
+
+export const {
+  useGetCoinsQuery 
+} = cryptoApi;
 
 export default cryptoApi;
