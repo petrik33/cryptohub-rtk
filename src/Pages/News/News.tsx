@@ -40,11 +40,11 @@ const mapNews = (cryptoNews: ISearchNewsResponse) => {
   }
   
   return articles.map((article, idx) => (
-    <Col xs={24} sm={12} lg={6} key={idx}>
+    <Col xs={48} sm={24} lg={12} key={idx}>
       <Card
+      title={article.published_date}
         extra={
-          `${article.publisher.name} - 
-          ${article.published_date}`
+          `${article.publisher.name}`
         } 
         hoverable 
         className='news-card'
