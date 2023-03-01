@@ -3,7 +3,7 @@ import { Avatar, Button, Menu, Typography } from 'antd';
 import { Link } from 'react-router-dom';
 import { HomeOutlined, MoneyCollectOutlined, BulbOutlined, FundOutlined, MenuOutlined } from '@ant-design/icons';
 
-import icon from '../../Images/cryptocurrency.png';
+import icon from '../../Images/blockchain.png';
 
 const minLandWidth = 768;
 
