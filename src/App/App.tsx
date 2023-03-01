@@ -28,8 +28,8 @@ const App : React.FC = () => {
             level={5} 
             style={{color: 'white', textAlign: 'center'}}
           >
-              Cryptoverse <br />
-              Made by ?
+              CryptoHub <br />
+              Made by petrik33
           </Typography.Title>
           <Space>
             <Link to='/'>Home</Link>
