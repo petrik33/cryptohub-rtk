@@ -140,6 +140,15 @@ a:hover {
   }
 }
 
+.title-crypto-logo {
+  display: inline-block;
+  position: relative;
+  top: 2px;
+  width: 0.75em;
+  height: 0.75em;
+  margin-right: 0.25em;
+}
+
 .coin-detail-container {
   margin: 30px;
 }
@@ -213,6 +222,7 @@ a:hover {
 
 .coin-desc-link {
   display: flex;
+  flex-direction: column;
   gap: 40px;
   margin-top: 40px;
   padding-top: 20px;
