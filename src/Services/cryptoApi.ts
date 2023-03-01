@@ -78,4 +78,6 @@ export const {
   useGetCoinsQuery 
 } = cryptoApi;
 
+export const defaultCoinsNum = 100;
+
 export default cryptoApi;
