@@ -2,7 +2,7 @@ import React from 'react';
 import { Navbar } from '../Components';
 import './App.css';
 import { Route, Routes, Link } from 'react-router-dom';
-import { CryptoDetails, Cryptocurrencies, Exchanges, Homepage, News } from '../Pages';
+import { CryptoDetails, Cryptocurrencies, Homepage, News } from '../Pages';
 import { Space, Layout, Typography } from 'antd';
 
 const App : React.FC = () => {
@@ -15,11 +15,10 @@ const App : React.FC = () => {
         <Layout>
           <div className='routes'>
             <Routes>
-              <Route path='/' element={<Homepage />} />
-              <Route path='/exchanges' element={<Exchanges />} />
-              <Route path='/cryptocurrencies' element={<Cryptocurrencies />} />
-              <Route path='/crypto/:coinId' element={<CryptoDetails />} />
-              <Route path='/news' element={<News />} />
+              <Route path='/cryptohub-rtk' element={<Homepage />} />
+              <Route path='/cryptohub-rtk/cryptocurrencies' element={<Cryptocurrencies />} />
+              <Route path='/cryptohub-rtk/crypto/:coinId' element={<CryptoDetails />} />
+              <Route path='/cryptohub-rtk/news' element={<News />} />
             </Routes>
           </div>
         </Layout>
@@ -32,11 +31,11 @@ const App : React.FC = () => {
               Made by petrik33
           </Typography.Title>
           <Space>
-            <Link to='/'>Home</Link>
-            <Link to='/cryptocurrencies'>
+            <Link to='/cryptohub-rtk/'>Home</Link>
+            <Link to='/cryptohub-rtk/cryptocurrencies'>
               Cryptocurrencies
             </Link>
-            <Link to='/news'>News</Link>
+            <Link to='/cryptohub-rtk/news'>News</Link>
           </Space>
         </footer>
       </main>
