@@ -1,9 +1,11 @@
-import React from 'react';
-import { Select, Typography, Row, Col, Avatar, Card } from 'antd';
+import React, { useState } from 'react';
+import { Select, Typography, Row, Col, Card } from 'antd';
+import moment from 'moment';
 
 import { ISearchNewsResponse, defaultSearchQuery, useSearchNewsQuery } from '../../Services/newsApi';
+import { useGetCoinsQuery, defaultCoinsNum, IGetCoinsResponse } from '../../Services/cryptoApi';
 
-const { Text, Title } = Typography;
+const { Title } = Typography;
 const { Option } = Select;
 
 export interface INewsProps {
@@ -11,28 +13,52 @@ export interface INewsProps {
 }
 
 const News : React.FC<INewsProps> = (props) => {
-  const { data: cryptoNews, isFetching } 
-    = useSearchNewsQuery({
-      q: 'cryptocurrencies',
-      pageSize: props.simplified ? 6 : 12
+  const { data: cryptosData } = 
+    useGetCoinsQuery({
+      count: defaultCoinsNum
   });
 
-  console.log(cryptoNews);
+  const [searchCrypto, setSearchCrypto] = 
+    useState(defaultSearchQuery);
 
-  if(isFetching || !cryptoNews) {
-    return <Title level={2}>Loading...</Title>
-  }
+  const { data: newsData, isFetching: newsFetching } =
+    useSearchNewsQuery({
+      q: searchCrypto,
+      pageSize: getPageSize(props.simplified)
+  });
 
-  const news = mapNews(cryptoNews);
+  const news = mapNews(newsData);
+  const coinOptions = mapCoins(cryptosData);
 
   return (
     <Row gutter={[ 24, 24]}>
-      {news}
+      {!props.simplified && (
+        <Col span={24}>
+          <Select
+            showSearch
+            className='select-news'
+            placeholder='Select a Crypto'
+            optionFilterProp='children'
+            onChange={(value) => {setSearchCrypto(value)}}
+          >
+            <Option value={defaultSearchQuery}>
+              All Cryptos
+            </Option>
+            {coinOptions}
+          </Select>
+        </Col>
+      )}
+      {newsFetching 
+        ? <Title level={2}>Loading...</Title>
+        : news}
     </Row>
   );
 }
 
-const mapNews = (cryptoNews: ISearchNewsResponse) => {
+const mapNews = (cryptoNews: ISearchNewsResponse | undefined) => {
+  if(!cryptoNews) {
+    return <Title level={2}>Loading...</Title>
+  }
   const articles = cryptoNews.articles;
 
   if(articles.length <= 0) {
@@ -40,11 +66,20 @@ const mapNews = (cryptoNews: ISearchNewsResponse) => {
   }
   
   return articles.map((article, idx) => (
-    <Col xs={48} sm={24} lg={12} key={idx}>
+    <Col xs={36} sm={24} lg={12} key={idx}>
       <Card
-      title={article.published_date}
-        extra={
-          `${article.publisher.name}`
+        title= {
+          <a 
+            href={article.publisher.url}
+            title={article.publisher.name}
+          >
+            {article.publisher.name}
+          </a> 
+        }
+        extra= {
+          moment(article.published_date)
+            .startOf('seconds')
+            .fromNow()
         } 
         hoverable 
         className='news-card'
@@ -55,15 +90,33 @@ const mapNews = (cryptoNews: ISearchNewsResponse) => {
           rel='noreferrer'
           title={article.title}
         >
-          <div className="news-image-container">
-            <Title className='news-title' level={4}>
-              {article.title}
-            </Title>
-          </div>
+          <Title className='news-title' level={4}>
+            {article.title}
+          </Title>
         </a>
       </Card>
     </Col>
   ));
 }
+
+const mapCoins = 
+  (cryptosData: IGetCoinsResponse | undefined) => {
+    if(!cryptosData) {
+      return null;
+    }
+    const coins = cryptosData.data.coins;
+    return coins.map((coin) => (
+      <Option value={coin.name}>
+        {coin.name}
+      </Option>
+    ))
+}
+
+const getPageSize = (simplified: boolean | undefined) => {
+  return simplified ? pageSizeSimplified : pageSizeFull;
+}
+
+const pageSizeSimplified = 4;
+const pageSizeFull = 10;
 
 export default News;
