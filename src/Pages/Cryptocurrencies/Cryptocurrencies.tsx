@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Row, Col, Input } from 'antd'
-import { IGetCoinResponseCoin, useGetCoinsQuery } from '../../Services/cryptoApi';
+import { IGetCoinResponseCoin, defaultCoinsNum, useGetCoinsQuery } from '../../Services/cryptoApi';
 import { Link } from 'react-router-dom';
 import millify from 'millify';
 import Title from 'antd/es/typography/Title';
@@ -10,7 +10,7 @@ export interface ICryptocurrenciesProps {
 }
 
 const Cryptocurrencies : React.FC<ICryptocurrenciesProps> = (props) => {
-  const count = props.simplified ? 10 : 100;
+  const count = props.simplified ? 10 : defaultCoinsNum;
   const { data, isFetching } = useGetCoinsQuery({count});
 
   const [cryptos, setCryptos] = 
