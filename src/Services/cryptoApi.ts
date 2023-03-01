@@ -40,7 +40,7 @@ export interface IGetCoinByIdResponseCoinSupply {
   max: string;
 }
 
-export interface IGetCoinByIdResponseCoinAllTimeHigh {
+export interface ICoinPrice {
   price: string;
   timestamp: number;
 }
@@ -62,7 +62,7 @@ export interface IGetCoinByIdResponseCoin extends IGetCoinResponseCoin {
   priceAt: number | null;
   numberOfMarkets: number;
   numberOfExchanges: number;
-  allTimeHigh: IGetCoinByIdResponseCoinAllTimeHigh;
+  allTimeHigh: ICoinPrice;
   lowVolume: boolean;
   notices: Object[] | null;
   tags: string[] | null;
@@ -75,8 +75,21 @@ export interface IGetCoinByIdResponse  {
   }
 }
 
-export interface IGetCoinsRequestParams {
+export interface IGetCoinHistoryByIdResponse {
+  status: 'success',
+  data: {
+    change: string;
+    history: ICoinPrice[]
+  }
+}
+
+export interface IGetCoinsRequest {
   count?: number
+}
+
+export interface IGetCoinHistoryByIdRequest {
+  coinId: string;
+  timePeriod: string;
 }
 
 const cryptoApiHeaders = {
@@ -92,17 +105,25 @@ const cryptoApi = createApi({
   reducerPath: 'cryptoApi',
   baseQuery: fetchBaseQuery({ baseUrl }),
   endpoints: (builder) => ({
-    getCoins: builder.query<IGetCoinsResponse, IGetCoinsRequestParams | void>({
+    getCoins: builder.query<IGetCoinsResponse, IGetCoinsRequest | void>({
       query: (params) => getCoinsUrl(params)
     }),
     getCoinById: builder.query<IGetCoinByIdResponse, string>({
       query: (coinId) => getCoinByIdUrl(coinId)
+    }),
+    getCoinHistoryById: builder.query<IGetCoinHistoryByIdResponse,IGetCoinHistoryByIdRequest>({
+      query: (params) => getCoinHistoryByIdUrl(params)
     })
   })
 })
 
+const getCoinHistoryByIdUrl = 
+  (params: IGetCoinHistoryByIdRequest) => {
+    return createRequest(`/coin/${params.coinId}/history/${params.timePeriod}`);
+}
+
 const getCoinsUrl = 
-  (params: IGetCoinsRequestParams | void) => {
+  (params: IGetCoinsRequest | void) => {
     let url = '/coins';
 
     if(!params) {
@@ -122,7 +143,8 @@ const getCoinByIdUrl = (coinId: string) => {
 
 export const {
   useGetCoinsQuery,
-  useGetCoinByIdQuery
+  useGetCoinByIdQuery,
+  useGetCoinHistoryByIdQuery
 } = cryptoApi;
 
 export const defaultCoinsNum = 100;
