@@ -10,7 +10,7 @@ export interface ICryptocurrenciesProps {
 }
 
 const Cryptocurrencies : React.FC<ICryptocurrenciesProps> = (props) => {
-  const count = props.simplified ? 10 : defaultCoinsNum;
+  const count = props.simplified ? 12 : defaultCoinsNum;
   const { data, isFetching } = useGetCoinsQuery({count});
 
   const [cryptos, setCryptos] = 
