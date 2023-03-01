@@ -19,11 +19,30 @@ export interface IGetCoinResponseCoin {
   marketCap: string,
   price: string,
   btcPrice: string,
-  listeadAt: number | null,
+  listedAt: number | null,
   change: string,
   rank: number,
   sparkline: string[],
   coinrankingUrl: string
+}
+
+export interface IGetCoinByIdResponseCoinLink {
+  name: string,
+  url: string,
+  type: string
+}
+
+export interface IGetCoinByIdResponseCoinSupply {
+  confirmed: boolean;
+  supplyAt: number | null;
+  total: string;
+  circulating: string;
+  max: string;
+}
+
+export interface IGetCoinByIdResponseCoinAllTimeHigh {
+  price: string;
+  timestamp: number;
 }
 
 export interface IGetCoinsResponse {
@@ -31,6 +50,28 @@ export interface IGetCoinsResponse {
   data: {
     stats: IGetCoinResponseStats
     coins: IGetCoinResponseCoin[]
+  }
+}
+
+export interface IGetCoinByIdResponseCoin extends IGetCoinResponseCoin {
+  description: string;
+  websiteUrl: string;
+  links: IGetCoinByIdResponseCoinLink[];
+  supply: IGetCoinByIdResponseCoinSupply;
+  fullyDilutedMarketCap: string;
+  priceAt: number | null;
+  numberOfMarkets: number;
+  numberOfExchanges: number;
+  allTimeHigh: IGetCoinByIdResponseCoinAllTimeHigh;
+  lowVolume: boolean;
+  notices: Object[] | null;
+  tags: string[] | null;
+}
+
+export interface IGetCoinByIdResponse  {
+  status: 'success',
+  data: {
+    coin: IGetCoinByIdResponseCoin
   }
 }
 
@@ -52,16 +93,17 @@ const cryptoApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl }),
   endpoints: (builder) => ({
     getCoins: builder.query<IGetCoinsResponse, IGetCoinsRequestParams | void>({
-      query: (params) => {
-        return getCoinsUrl(params);
-      }
+      query: (params) => getCoinsUrl(params)
+    }),
+    getCoinById: builder.query<IGetCoinResponseCoin, string>({
+      query: (coinId) => getCoinByIdUrl(coinId)
     })
   })
 })
 
 const getCoinsUrl = 
   (params: IGetCoinsRequestParams | void) => {
-    let url = './coins';
+    let url = '/coins';
 
     if(!params) {
       return createRequest(url);
@@ -74,8 +116,13 @@ const getCoinsUrl =
     return createRequest(url);
 }
 
+const getCoinByIdUrl = (coinId: string) => {
+  return createRequest(`/coin/${coinId}`);
+}
+
 export const {
-  useGetCoinsQuery 
+  useGetCoinsQuery,
+  useGetCoinByIdQuery
 } = cryptoApi;
 
 export const defaultCoinsNum = 100;
