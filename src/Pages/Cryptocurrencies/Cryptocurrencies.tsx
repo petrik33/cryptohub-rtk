@@ -58,7 +58,7 @@ const mapCryptos = (cryptos: IGetCoinResponseCoin[] | undefined) => {
 
     return cryptos.map((currency) => (
       <Col xs={24} sm={12} lg={6} className='crypto-card' key={currency.uuid}>
-        <Link to={`/crypto/${currency.uuid}`}>
+        <Link to={`/cryptohub-rtk/crypto/${currency.uuid}`}>
           {getCurrencyCard(currency)}
         </Link>
       </Col>

@@ -59,7 +59,7 @@ const Homepage : React.FC = () => {
           Top 10 Cryptocurrencies in the world
         </Title>
         <Title level={3} className='show-more'>
-          <Link to='/cryptocurrencies'>
+          <Link to='/cryptohub-rtk/cryptocurrencies'>
             Show More
           </Link>
         </Title>
@@ -71,7 +71,7 @@ const Homepage : React.FC = () => {
           Latest Crypto News
         </Title>
         <Title level={3} className='show-more'>
-          <Link to='/news'>
+          <Link to='/cryptohub-rtk/news'>
             Show More
           </Link>
         </Title>
