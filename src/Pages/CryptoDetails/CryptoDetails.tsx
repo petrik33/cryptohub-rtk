@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { useGetCoinByIdQuery, IGetCoinByIdResponseCoin } from '../../Services/cryptoApi';
+import { useGetCoinByIdQuery, IGetCoinByIdResponseCoin, useGetCoinHistoryByIdQuery } from '../../Services/cryptoApi';
 import millify from 'millify';
 import { MoneyCollectOutlined, DollarCircleOutlined, FundOutlined, ExclamationCircleOutlined, StopOutlined, TrophyOutlined, CheckOutlined, NumberOutlined, ThunderboltOutlined } from '@ant-design/icons';
 import { Col, Row, Select, Typography } from 'antd';
 import HTMLReactParser from 'html-react-parser';
+import LineChart from '../../Components/Linechart/Linechart';
 
 const { Text, Title } = Typography;
 
@@ -14,16 +15,22 @@ export interface ICryptoDetailsProps {
 
 const CryptoDetails : React.FC<ICryptoDetailsProps> = (props) => {
   const { coinId } = useParams();
-  const [timePeriod, setTimePeriod] = useState('7d');
-  const { data, isFetching } = 
-    useGetCoinByIdQuery(getQueryCoinID(coinId));
-  console.log(data);
 
-  if(isFetching || !data) {
+  const [timePeriod, setTimePeriod] = useState('7d');
+
+  const { data: coinData, isFetching: coinFetching } = 
+    useGetCoinByIdQuery(getQueryCoinID(coinId));
+  const { data: coinHistoryData, isFetching: historyFetching }
+    = useGetCoinHistoryByIdQuery({ 
+      coinId: getQueryCoinID(coinId), 
+      timePeriod 
+    });
+
+  if(coinFetching || !coinData) {
     return <Title level={2}>Loading...</Title>
   }
 
-  const coin = data.data.coin;
+  const coin = coinData.data.coin;
 
   const timeOptions = mapTimeFrames();
   const coinStats = mapStats(getCoinStats(coin));
@@ -55,6 +62,12 @@ const CryptoDetails : React.FC<ICryptoDetailsProps> = (props) => {
         {timeOptions}
       </Select>
 
+      <LineChart 
+        coinHistory={coinHistoryData?.data} 
+        coinName={coin.name}
+        currentPrice={millify(Number.parseFloat(coin.price))}
+      />
+
       <Col className='stats-container'>
         <Col className='coin-value-statistics'>
           <Col className='coin-value-statistics-heading'>
@@ -70,6 +83,7 @@ const CryptoDetails : React.FC<ICryptoDetailsProps> = (props) => {
           </Col>
           {coinStats}
         </Col>
+
         <Col className='other-stats-info'>
           <Col className='coin-value-statistics-heading'>
             <Title 
