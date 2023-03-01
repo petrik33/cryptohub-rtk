@@ -95,7 +95,7 @@ const cryptoApi = createApi({
     getCoins: builder.query<IGetCoinsResponse, IGetCoinsRequestParams | void>({
       query: (params) => getCoinsUrl(params)
     }),
-    getCoinById: builder.query<IGetCoinResponseCoin, string>({
+    getCoinById: builder.query<IGetCoinByIdResponse, string>({
       query: (coinId) => getCoinByIdUrl(coinId)
     })
   })
