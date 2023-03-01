@@ -119,7 +119,7 @@ const cryptoApi = createApi({
 
 const getCoinHistoryByIdUrl = 
   (params: IGetCoinHistoryByIdRequest) => {
-    return createRequest(`/coin/${params.coinId}/history/${params.timePeriod}`);
+    return createRequest(`/coin/${params.coinId}/history?timePeriod=${params.timePeriod}`);
 }
 
 const getCoinsUrl = 
