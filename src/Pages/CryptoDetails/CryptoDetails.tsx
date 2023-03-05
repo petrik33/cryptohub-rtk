@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useGetCoinByIdQuery, IGetCoinByIdResponseCoin, useGetCoinHistoryByIdQuery } from '../../Services/cryptoApi';
 import millify from 'millify';
@@ -20,7 +20,7 @@ const CryptoDetails : React.FC<ICryptoDetailsProps> = (props) => {
 
   const { data: coinData, isFetching: coinFetching } = 
     useGetCoinByIdQuery(getQueryCoinID(coinId));
-  const { data: coinHistoryData, isFetching: historyFetching }
+  const { data: coinHistoryData }
     = useGetCoinHistoryByIdQuery({ 
       coinId: getQueryCoinID(coinId), 
       timePeriod 
